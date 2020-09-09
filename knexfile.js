@@ -7,7 +7,7 @@ module.exports = {
     connection: {
       filename: './data/jwt-project.db3'
     },
-    useNullAdDefault: true,
+    useNullAsDefault: true,
     migrations: {
       directory: './data/migrations'
     }
