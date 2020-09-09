@@ -1,8 +1,8 @@
 const express = require('express');
 const server = express();
-// const taskRouter = require('./routers/taskRouter');
+const router = require('./users/users-router');
 
 server.use(express.json());
-// server.use('/tasks', taskRouter);
+server.use('/api', router);
 
 module.exports = server;
