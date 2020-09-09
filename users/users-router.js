@@ -1,6 +1,7 @@
 const express = require('express')
 const Users = require('./users-model')
 const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
 // const usersMiddleware = require('./users-middleware')
 
 const router = express.Router()
@@ -60,11 +61,17 @@ router.post("/login", async (req, res, next) => {
 				message: "You shall not pass!",
 			})
 		}
+        
+        // generate a new JSON web token
+        const token = jwt.sign({
+            userID: user.id,
+            userDept: user.department
+        }, process.env.JWT_SECRET)
+        // tried below before realizing that dotenv was not installed/required
+        // const token = generateToken(user)
 
-        // if it didn't error out, create new session for user
-        // need to install express-session & connect-session-knex for next line
-        // (connect-session-knex configured in server.js)
-		// req.session.user = user
+        // send the token back as a cookie
+        res.cookie('token', token)
 
 		res.json({
 			message: `Welcome ${user.username}!`,
@@ -73,6 +80,20 @@ router.post("/login", async (req, res, next) => {
 		next(err)
 	}
 })
+
+// function generateToken(user) {
+//     const payload = {
+//         subject: user.id,
+//         username: user.username,
+//         userDept: user.department
+//     }
+
+//     const options = {
+//         expiresIn: '1d'
+//     }
+
+//     return jwt.sign(payload, process.env.JWT_SECRET, options)
+// }
 
 // LOGOUT
 // router.get("/logout", usersMiddleware.restrict(), async (req, res, next) => {
